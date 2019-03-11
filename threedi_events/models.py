@@ -52,6 +52,7 @@ class ModelMeta(models.Model):
         on_delete=models.CASCADE,    
     )
     extent_one_d = 
+    extent_zero_d
     nodes_count = 
     lines_count = 
 
