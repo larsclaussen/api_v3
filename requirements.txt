@@ -1,0 +1,6 @@
+Django>=2.0,<3.0
+psycopg2>=2.7,<3.0
+ipython>=7.3.0
+djangorestframework
+markdown       # Markdown support for the browsable API.
+django-filter  # Filtering support
