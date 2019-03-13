@@ -44,17 +44,17 @@ class DEMMeta(models.Model):
     projection
     epsg
     extent
-    dimensions    
+    dimensions
 
 
 class ModelMeta(models.Model):
-    dem_meta = models.ForeignKey(DEMMeta, 
-        on_delete=models.CASCADE,    
+    dem_meta = models.ForeignKey(DEMMeta,
+        on_delete=models.CASCADE,
     )
-    extent_one_d = 
+    extent_one_d =
     extent_zero_d
-    nodes_count = 
-    lines_count = 
+    nodes_count =
+    lines_count =
 
 
 class Breaches(models.Model):
@@ -87,7 +87,7 @@ class BaseEvent(models.Model):
         ('radar', 'radar'),
         ('design', 'design'),
     )
-    simulation = models.ForeignKey(SimulationMeta, 
+    simulation = models.ForeignKey(SimulationMeta,
         on_delete=models.CASCADE,
     )
     active_from	= models.DateTimeField(help_text="Start of event in simulation (ISO 8601 format)")
@@ -127,14 +127,12 @@ class RainLocalEvent(TimeseriesEvent):
 
 
 
-
-
 class ReferenceEvent(BaseEvent):
     """reference an event hosted on a specific location"""
     # base class holds the type information
     reference = models.CharField(max_length=80, help_text="reference")
     reference_uuid = models.CharField(max_length=40)
-    start = models.DateTimeField()   
+    start = models.DateTimeField()
 
 class LizardRadarEvent(ReferenceEvent):
 
@@ -144,13 +142,13 @@ class LizardRadarEvent(ReferenceEvent):
     origin_offset = models.IntegerField()
     store_path = models.CharField(max_length=80)
     # check how to use dynamic managers
-    objects = # some custom manager, e.g LizardRadarManager() 
+    objects = # some custom manager, e.g LizardRadarManager()
 
 
 class ReferenceTimeseriesEvent(TimeseriesEvent):
     """reference a timeseries hosted on a specific location"""
-    start = models.DateTimeField()   
-    objects = # some custom manager, e.g LizardTimeseriesManager() 
+    start = models.DateTimeField()
+    objects = # some custom manager, e.g LizardTimeseriesManager()
 
 
 class ReferenceRainEvent(BaseEvent):
@@ -164,7 +162,7 @@ class ReferenceRainEvent(BaseEvent):
     origin_offset = models.IntegerField()
     store_path = models.CharField(max_length=80)
     # check how to use dynamic managers
-    objects = LizardReferenceManager() 
+    objects = LizardReferenceManager()
 
     @property
     def datacls(self):
@@ -179,7 +177,7 @@ class ReferenceRainEvent(BaseEvent):
             self.start, resolution, origin_offset)
 
         return RainRadar(
-            multiplier=self.multiplier, 
+            multiplier=self.multiplier,
             layer_name=self.layer,
             model_slug=self.simulation.model_slug,
             request_start=request_start,
@@ -261,7 +259,7 @@ class LizardReferenceManager(models.Manager):
         new_event = self.model(**layer_info)
         new_event.save()
         return new_event
- 
+
 
 
 
@@ -273,7 +271,7 @@ class RainTimeseriesEvent(TimeseriesEvent):
 class WindEvent(BaseEvent):
     speed = models.PositiveSmallIntegerField(help_text="speed in m/s (0-120)")
     direction = models.PositiveSmallIntegerField(help_text="direction in degrees (0-360) from north - meteorlogical standard")
-    drag_coefficient = models.PositiveSmallIntegerField(help_text="drag coefficient (0-100)")    
+    drag_coefficient = models.PositiveSmallIntegerField(help_text="drag coefficient (0-100)")
 
 
 class TimeseriesSourcesSinksEvent(TimeseriesEvent):
@@ -305,7 +303,7 @@ class BreachEvent(BaseEvent):
 
 
 class RasterEditEvent(BaseEvent):
-    layer = models.CharField(max_length=120, help_text="Layername, for now only 'dem' is allowed") 
+    layer = models.CharField(max_length=120, help_text="Layername, for now only 'dem' is allowed")
     value = models.FloatField(help_text="Absolute height (in meters) to use for the polygon")
     polygon_wkt = models.PolygonField(srid=4326, help_text="The polygon to use for the raster edit in WKT format, new must be WGS84")
 
@@ -323,14 +321,7 @@ class StructureControlEvent(TimeseriesEvent):
     structure_type = models.CharField(max_length=50)
     property_name = models.CharField(max_length=50)
 
-class FloodfillEvent(BaseEvent):
-    point = models.PointField(srid=4326)
-    waterlevel = models.FloatField()
-    is_absolute = models.BooleanField(
-        blank=False, 
-        help_text="Apply the waterlevel of the event either as absolute or relative value"
-    )    
-    
+
 
 
 
@@ -367,7 +358,7 @@ class FloodfillEvent(BaseEvent):
 
 
 class Test:
-    def __init__(self): 
+    def __init__(self):
         self.b = None
         self.c = 1
         self.d = ''
@@ -375,9 +366,9 @@ class Test:
 
 def has_attrs(inst, *args):
     """
-    checks if the instance has all attributes 
-    as specified in *args and if they not falsy   
-    
+    checks if the instance has all attributes
+    as specified in *args and if they not falsy
+
     :param inst: obj instance
     :param args: attribute names of the object
     """
@@ -398,5 +389,5 @@ def _action_table(self):
         capacities_list = str(self.action_table.split('#')[1]).split(';')
         capacities = ";".join([str(float(q)*factor)
                                 for q in capacities_list])
-        _action_table = "#".join([levels, capacities]) 
-    return _action_table   
+        _action_table = "#".join([levels, capacities])
+    return _action_table
